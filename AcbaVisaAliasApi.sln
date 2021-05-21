@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcbaVisaAliasApi", "AcbaVisaAliasApi\AcbaVisaAliasApi.csproj", "{36469140-5069-4A8C-A303-EB7A75B58C61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{7DEF2056-C26E-401E-9201-D7E35085AA36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{6D036B25-A8CC-4D8A-8CC5-236B8B39E228}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{19BF7E19-F583-4B41-AE89-1576E4E943E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcbaVisaAliasApi.Application", "AcbaVisaAliasApi.Application\AcbaVisaAliasApi.Application.csproj", "{BF6DB9BF-77EB-42AB-A580-8C29DE412851}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcbaVisaAliasApi.Infrastructure", "AcbaVisaAliasApi.Infrastructure\AcbaVisaAliasApi.Infrastructure.csproj", "{C65E9B95-581C-4C9D-8A15-C2DAE69256CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36469140-5069-4A8C-A303-EB7A75B58C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36469140-5069-4A8C-A303-EB7A75B58C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36469140-5069-4A8C-A303-EB7A75B58C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36469140-5069-4A8C-A303-EB7A75B58C61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF6DB9BF-77EB-42AB-A580-8C29DE412851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6DB9BF-77EB-42AB-A580-8C29DE412851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6DB9BF-77EB-42AB-A580-8C29DE412851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6DB9BF-77EB-42AB-A580-8C29DE412851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C65E9B95-581C-4C9D-8A15-C2DAE69256CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C65E9B95-581C-4C9D-8A15-C2DAE69256CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C65E9B95-581C-4C9D-8A15-C2DAE69256CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C65E9B95-581C-4C9D-8A15-C2DAE69256CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{36469140-5069-4A8C-A303-EB7A75B58C61} = {19BF7E19-F583-4B41-AE89-1576E4E943E8}
+		{BF6DB9BF-77EB-42AB-A580-8C29DE412851} = {7DEF2056-C26E-401E-9201-D7E35085AA36}
+		{C65E9B95-581C-4C9D-8A15-C2DAE69256CA} = {6D036B25-A8CC-4D8A-8CC5-236B8B39E228}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {908D9337-9BC6-4688-AEE3-E8B01A73919C}
+	EndGlobalSection
+EndGlobal
