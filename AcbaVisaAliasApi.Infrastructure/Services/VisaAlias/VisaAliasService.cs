@@ -30,8 +30,8 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
 
         public async Task<GetAliasResponse> GetVisaAliasAsync(GetAliasRequest request)
         {
-            GetVisaAliasRequest content = _mapper.Map<GetAliasRequest, GetVisaAliasRequest>(request);            
-           Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.GetAliasApi, content, VisaAliasAction.GetVisaAlias, content.Guid);
+            GetVisaAliasRequest content = _mapper.Map<GetAliasRequest, GetVisaAliasRequest>(request);
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.GetAliasApi, content);
             GetVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<GetVisaAliasResponse>(responseStream);
             return _mapper.Map<GetVisaAliasResponse, GetAliasResponse>(response);
         }
@@ -39,7 +39,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         public async Task<CreateAliasResponse> CreateVisaAliasAsync(CreateAliasRequest request)
         {
             CreateVisaAliasRequest content = _mapper.Map<CreateAliasRequest, CreateVisaAliasRequest>(request);
-            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.CreateAliasApi, content , VisaAliasAction.CreateVisaAlias, content.Guid);
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.CreateAliasApi, content);
             CreateVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<CreateVisaAliasResponse>(responseStream);
             return _mapper.Map<CreateVisaAliasResponse, CreateAliasResponse>(response);
         }
@@ -47,7 +47,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         public async Task<UpdateAliasResponse> UpdateVisaAliasAsync(UpdateAliasRequest request)
         {
             UpdateVisaAliasRequest content = _mapper.Map<UpdateAliasRequest, UpdateVisaAliasRequest>(request);
-            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.UpdateAliasApi, content, VisaAliasAction.UpdateVisaAlias, content.Guid);
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.UpdateAliasApi, content);
             UpdateVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<UpdateVisaAliasResponse>(responseStream);
             return _mapper.Map<UpdateVisaAliasResponse, UpdateAliasResponse>(response);
         }
@@ -55,14 +55,14 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         public async Task<DeleteAliasResponse> DeleteVisaAliasAsync(DeleteAliasRequest request)
         {
             DeleteVisaAliasRequest content = _mapper.Map<DeleteAliasRequest, DeleteVisaAliasRequest>(request);
-            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.DeleteAliasApi, content, VisaAliasAction.DeleteVisaAlias, content.Guid);
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.DeleteAliasApi, content);
             DeleteVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<DeleteVisaAliasResponse>(responseStream);
             return _mapper.Map<DeleteVisaAliasResponse, DeleteAliasResponse>(response);
         }
 
         public async Task<GetAliasReportResponse> GetVisaAliasReportAsync(GetAliasReportRequest request)
         {
-            Stream responseStream = await _httpRequestSender.SendGetRequest($"{_VisaAliasOptions.GetReportApi}/{request.Reportid}/{request.Pageid}", VisaAliasAction.GetVisaAliasReport, "");
+            Stream responseStream = await _httpRequestSender.SendGetRequest($"{_VisaAliasOptions.GetReportApi}/{request.Reportid}/{request.Pageid}");
             GetVisaAliasReportResponse response = await _cryptographyHelper.DecryptResponse<GetVisaAliasReportResponse>(responseStream);
             return _mapper.Map<GetVisaAliasReportResponse, GetAliasReportResponse>(response);
         }
@@ -70,7 +70,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         public async Task<GenerateAliasReportResponse> GenerateVisaAliasReportAsync(GenerateAliasReportRequest request)
         {
             GenerateVisaAliasReportRequest content = _mapper.Map<GenerateAliasReportRequest, GenerateVisaAliasReportRequest>(request);
-            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.GenerateReportApi, content, VisaAliasAction.GenerateVisaAliasReport, "");
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.GenerateReportApi, content);
             GenerateVisaAliasReportResponse response = await _cryptographyHelper.DecryptResponse<GenerateVisaAliasReportResponse>(responseStream);
             return _mapper.Map<GenerateVisaAliasReportResponse, GenerateAliasReportResponse>(response);
         }
@@ -78,7 +78,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         public async Task<ResolveAliasResponse> ResolveVisaAliasAsync(ResolveAliasRequest request)
         {
             ResolveVisaAliasRequest content = _mapper.Map<ResolveAliasRequest, ResolveVisaAliasRequest>(request);
-            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.ResolveApi, content, VisaAliasAction.ResolveVisaAlias, "");
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.ResolveApi, content);
             ResolveVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<ResolveVisaAliasResponse>(responseStream);
             ResolveAliasResponse resolveAliasResponse = _mapper.Map<ResolveVisaAliasResponse, ResolveAliasResponse>(response);
             return resolveAliasResponse;
@@ -86,7 +86,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
 
         public async Task<TestCredentialsResponse> TestCredentials()
         {
-            Stream responseStream = await _httpRequestSender.SendGetRequest($"/vdp/helloworld", VisaAliasAction.NotDefined, "");
+            Stream responseStream = await _httpRequestSender.SendGetRequest($"/vdp/helloworld");
             var response = await JsonSerializer.DeserializeAsync<TestCredentialsResponse>(responseStream, DefaultJsonSettings.Settings);
             return response;
         }

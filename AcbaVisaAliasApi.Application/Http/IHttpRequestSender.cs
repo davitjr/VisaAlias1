@@ -6,7 +6,7 @@ namespace AcbaVisaAliasApi.Application.Http
 {
     public interface IHttpRequestSender
     {
-        Task<Stream> SendPostRequest(string requestUri, object content, VisaAliasAction visaAliasAction, string guId);
-        Task<Stream> SendGetRequest(string requestUri, VisaAliasAction visaAliasAction, string guId);
+        Task<Stream> SendPostRequest(string requestUri, object content);
+        Task<Stream> SendGetRequest(string requestUri);
     }
 }

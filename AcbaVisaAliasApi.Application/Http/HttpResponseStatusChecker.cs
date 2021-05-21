@@ -33,6 +33,11 @@ namespace AcbaVisaAliasApi.Application.Http
                 case HttpStatusCode.BadRequest:
                 case HttpStatusCode.ServiceUnavailable:
                 case HttpStatusCode.NotFound:
+                    {
+                        AliasErrorResponse aliasErrorResponse = await _cryptographyHelper.DecryptResponse<AliasErrorResponse>(await httpResponseMessage.Content.ReadAsStreamAsync());
+                        ProblemDetails validationProblemDetails = _problemDetailsHelper.SetAliasErrorProblemDetail(aliasErrorResponse, httpResponseMessage.StatusCode);
+                        throw new ApiProblemDetailsException(validationProblemDetails);
+                    }
                 case HttpStatusCode.InternalServerError:
                     {
                         if (httpResponseMessage.RequestMessage.RequestUri.AbsolutePath == _VisaAliasApiOptions.GetAliasApi && httpResponseMessage.StatusCode == HttpStatusCode.NotFound)

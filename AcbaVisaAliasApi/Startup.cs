@@ -1,4 +1,3 @@
-using AcbaVisaAliasApi.Application;
 using AcbaVisaAliasApi.Extensions;
 using AcbaVisaAliasApi.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -14,22 +13,9 @@ namespace AcbaVisaAliasApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            BuildAppSettingsProvider();
         }
 
         private readonly IConfiguration Configuration;
-
-
-        private void BuildAppSettingsProvider()
-        {
-            BuildAppDBConnectionSettingsProvider();            
-        }
-
-        public void BuildAppDBConnectionSettingsProvider()
-        {
-            DBConnections.AppLog = Configuration["ConnectionStrings:AppLog"];
-        }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -71,7 +57,7 @@ namespace AcbaVisaAliasApi
 
             app.UseAuthorization();
 
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();            
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.UseAutoWrapperWithConfigurations();
 

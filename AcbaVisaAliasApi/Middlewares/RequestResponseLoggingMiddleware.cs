@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IO;
 using System;
 using System.IO;
@@ -79,14 +80,16 @@ namespace AcbaVisaAliasApi.Middlewares
             responseBody.Seek(0, SeekOrigin.Begin);
             string text = _VisaAliasApiOptions.EnableOkResponseLogging ? await new StreamReader(responseBody).ReadToEndAsync() : string.Empty;
             responseBody.Seek(0, SeekOrigin.Begin);
-
+            context.Response.Headers.TryGetValue("X-CORRELATION-ID", out StringValues corralationId);
+            
             return $"Http Response Information:{Environment.NewLine}" +
                                    $"Schema:{context.Request.Scheme} " +
                                    $"StatusCode:{context.Response.StatusCode} " +
                                    $"Host: {context.Request.Host} " +
                                    $"Path: {context.Request.Path} " +
                                    $"QueryString: {context.Request.QueryString} " +
-                                   $"Response Body: {text}";
+                                   $"Response Body: {text} " +
+                                   $"X-CORRELATION-ID: {corralationId}";
         }
     }
 }
