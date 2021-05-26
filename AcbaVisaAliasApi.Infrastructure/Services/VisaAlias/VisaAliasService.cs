@@ -2,6 +2,8 @@
 using AcbaVisaAliasApi.Application.Helpers;
 using AcbaVisaAliasApi.Application.Http;
 using AcbaVisaAliasApi.Application.Settings;
+using AcbaVisaAliasApi.Infrastructure.DBManager;
+using AcbaVisaAliasApi.Infrastructure.Enums;
 using AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias;
 using AutoMapper;
 using Microsoft.Extensions.Options;
@@ -15,18 +17,20 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
     public class VisaAliasService : IVisaAliasService
     {
         public VisaAliasService(IHttpRequestSender httpRequestSender, IMapper mapper,
-            IOptions<VisaAliasApiOptions> VisaAliasOptions, ICryptographyHelper cryptographyHelper)
+            IOptions<VisaAliasApiOptions> VisaAliasOptions, ICryptographyHelper cryptographyHelper, IVisaAliasDB visaAliasDB)
         {
             _httpRequestSender = httpRequestSender;
             _mapper = mapper;
             _VisaAliasOptions = VisaAliasOptions.Value;
             _cryptographyHelper = cryptographyHelper;
+            _visaAliasDB = visaAliasDB;
         }
 
         private readonly VisaAliasApiOptions _VisaAliasOptions;
         private readonly IHttpRequestSender _httpRequestSender;
         private readonly ICryptographyHelper _cryptographyHelper;
         private readonly IMapper _mapper;
+        private readonly IVisaAliasDB _visaAliasDB;
 
         public async Task<GetAliasResponse> GetVisaAliasAsync(GetAliasRequest request)
         {
@@ -41,6 +45,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
             CreateVisaAliasRequest content = _mapper.Map<CreateAliasRequest, CreateVisaAliasRequest>(request);
             Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.CreateAliasApi, content);
             CreateVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<CreateVisaAliasResponse>(responseStream);
+            await _visaAliasDB.InsertVisaAliasactionHisoty(request.SetNumber, request.Guid, request.RecipientPrimaryAccountNumber, request.CardType, request.Alias, (short)VisaAliasActionTypes.createalias);
             return _mapper.Map<CreateVisaAliasResponse, CreateAliasResponse>(response);
         }
 
@@ -49,6 +54,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
             UpdateVisaAliasRequest content = _mapper.Map<UpdateAliasRequest, UpdateVisaAliasRequest>(request);
             Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.UpdateAliasApi, content);
             UpdateVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<UpdateVisaAliasResponse>(responseStream);
+            // TODO: Update Alias To Table
             return _mapper.Map<UpdateVisaAliasResponse, UpdateAliasResponse>(response);
         }
 
@@ -57,6 +63,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
             DeleteVisaAliasRequest content = _mapper.Map<DeleteAliasRequest, DeleteVisaAliasRequest>(request);
             Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.DeleteAliasApi, content);
             DeleteVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<DeleteVisaAliasResponse>(responseStream);
+            // TODO: Delete Alias From Table
             return _mapper.Map<DeleteVisaAliasResponse, DeleteAliasResponse>(response);
         }
 

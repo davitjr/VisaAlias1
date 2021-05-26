@@ -13,5 +13,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         Task<GenerateAliasReportResponse> GenerateVisaAliasReportAsync(GenerateAliasReportRequest request);
         Task<ResolveAliasResponse> ResolveVisaAliasAsync(ResolveAliasRequest request);
         Task<TestCredentialsResponse> TestCredentials();
+
+   
     }
 }

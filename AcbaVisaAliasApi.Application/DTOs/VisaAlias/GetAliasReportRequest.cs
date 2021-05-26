@@ -1,4 +1,4 @@
 ﻿namespace AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias
 {
-    public record GetAliasReportRequest(string Reportid, string Pageid);
+    public record GetAliasReportRequest(string Reportid, string Pageid, int SetNumber);
 }

@@ -35,6 +35,8 @@ namespace AcbaVisaAliasApi.Application.Http
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync(requestUri, new StringContent(
                 _cryptographyHelper.GetEncryptedPayload(JsonSerializer.Serialize(content, DefaultJsonSettings.Settings)),
                 Encoding.UTF8, MediaTypeNames.Application.Json));
+            
+            //TODO: Add Table To log History     await httpResponseMessage.Content.ReadAsStringAsync(); httpResponseMessage.StatusCode; requestUri
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-CORRELATION-ID", httpResponseMessage.Headers.GetValues("X-CORRELATION-ID").FirstOrDefault());
             return await ResponseHandlerAsync(httpResponseMessage);
         }
@@ -42,8 +44,8 @@ namespace AcbaVisaAliasApi.Application.Http
         public async Task<Stream> SendGetRequest(string requestUri)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(requestUri);
+            //TODO: Add Table To log History     await httpResponseMessage.Content.ReadAsStringAsync(); httpResponseMessage.StatusCode; requestUri
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-CORRELATION-ID", httpResponseMessage.Headers.GetValues("X-CORRELATION-ID").FirstOrDefault());
-
             return await ResponseHandlerAsync(httpResponseMessage);
         }
 
