@@ -16,5 +16,9 @@ namespace AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias
         public string Guid { get; init; }
         public string Alias { get; init; }
         public int SetNumber { get; set; }
+        
+        public string ExpiryDate { get; init; }
+
+        
     }
 }

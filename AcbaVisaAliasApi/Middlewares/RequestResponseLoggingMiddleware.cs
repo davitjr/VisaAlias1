@@ -81,7 +81,7 @@ namespace AcbaVisaAliasApi.Middlewares
             string text = _VisaAliasApiOptions.EnableOkResponseLogging ? await new StreamReader(responseBody).ReadToEndAsync() : string.Empty;
             responseBody.Seek(0, SeekOrigin.Begin);
             context.Response.Headers.TryGetValue("X-CORRELATION-ID", out StringValues corralationId);
-            
+
             return $"Http Response Information:{Environment.NewLine}" +
                                    $"Schema:{context.Request.Scheme} " +
                                    $"StatusCode:{context.Response.StatusCode} " +

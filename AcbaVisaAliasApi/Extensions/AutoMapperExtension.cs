@@ -1,5 +1,4 @@
 ﻿using AcbaVisaAliasApi.Mappings;
-using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AcbaVisaAliasApi.Extensions

@@ -15,5 +15,8 @@
         /// This attribute can contain information of a mobile phone number, email address, IBAN, merchant ID, etc.
         /// </summary>
         public string Alias { get; set; }
+
+        public string AccountLookUp { get; set; }
+
     }
 }

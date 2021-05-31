@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AcbaVisaAliasApi.Infrastructure.Enums
+﻿namespace AcbaVisaAliasApi.Infrastructure.Enums
 {
     public enum VisaAliasActionTypes : short
     {
-        createalias = 1,
+        createalias = 0,
 
-        updatealias = 2,
+        updatealias = 1,
 
-        deletealias = 3
+        deletealias = 2
     }
 }

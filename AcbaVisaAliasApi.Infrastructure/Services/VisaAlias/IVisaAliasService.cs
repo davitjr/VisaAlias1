@@ -1,4 +1,6 @@
 ﻿using AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias;
+using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
@@ -13,7 +15,6 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         Task<GenerateAliasReportResponse> GenerateVisaAliasReportAsync(GenerateAliasReportRequest request);
         Task<ResolveAliasResponse> ResolveVisaAliasAsync(ResolveAliasRequest request);
         Task<TestCredentialsResponse> TestCredentials();
-
-   
+        Task<List<VisaAliasActionHistoryResponse>> GetVisaAliasHistory(VisaAliasHistoryRequest request);
     }
 }

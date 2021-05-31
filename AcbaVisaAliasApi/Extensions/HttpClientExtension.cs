@@ -1,5 +1,5 @@
 ﻿using AcbaVisaAliasApi.Application.Helpers;
-using AcbaVisaAliasApi.Application.Http;
+using AcbaVisaAliasApi.Infrastructure.Http;
 using AcbaVisaAliasApi.Application.Settings;
 using AutoWrapper.Wrappers;
 using Microsoft.Extensions.Configuration;

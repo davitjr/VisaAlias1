@@ -24,6 +24,8 @@ namespace AcbaVisaAliasApi.Mappings
             CreateMap<AliasReportLinks, Links>();
             CreateMap<AliasReportContent, Content>();
             CreateMap<ResolveAliasRequest, ResolveVisaAliasRequest>();
+            CreateMap<VisaAliasNetworkInfo, VisaNetworkInfo>();
+            CreateMap<VisaAliasAccountLookUpInfo, AccountLookUpInfo>();
             CreateMap<ResolveVisaAliasResponse, ResolveAliasResponse>();
         }
     }

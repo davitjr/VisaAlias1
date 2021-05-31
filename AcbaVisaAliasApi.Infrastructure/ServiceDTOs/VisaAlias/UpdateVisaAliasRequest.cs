@@ -58,5 +58,11 @@
         /// Card type description. Reference to Field 62.23—Product ID of available card products. e.g. Visa Platinum
         /// </summary>
         public string CardType { get; set; }
+
+        public string ExpiryDate { get; set; }
+
+        public string NewGuid { get; set; }
+        
+
     }
 }

@@ -8,7 +8,7 @@ namespace AcbaVisaAliasApi.Application.Helpers
 {
     public class ProblemDetailsHelper : IProblemDetailsHelper
     {
-        private IStringLocalizer<SharedResource> _localizer;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         private ProblemDetails ProblemDetails { get; set; }
         public ProblemDetailsHelper(IStringLocalizer<SharedResource> localizer)
         {

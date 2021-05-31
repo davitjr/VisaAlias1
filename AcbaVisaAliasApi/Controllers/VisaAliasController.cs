@@ -1,7 +1,9 @@
 ﻿using AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias;
+using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
 using AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace AcbaVisaAliasApi.Controllers
         [HttpGet]
         public async Task<IActionResult> TestCredentials()
         {
-            var response = await _AcbaVisaAliasService.TestCredentials();
+            TestCredentialsResponse response = await _AcbaVisaAliasService.TestCredentials();
             return Ok(response);
         }
 
@@ -119,7 +121,7 @@ namespace AcbaVisaAliasApi.Controllers
         /// <response code="503">The server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay.</response>
         [HttpPost]
         [ProducesResponseType(typeof(GetAliasReportResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes. Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
@@ -175,6 +177,22 @@ namespace AcbaVisaAliasApi.Controllers
         public async Task<IActionResult> ResolveVisaAliasAsync([FromBody] ResolveAliasRequest request)
         {
             ResolveAliasResponse response = await _AcbaVisaAliasService.ResolveVisaAliasAsync(request);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Visa Alias history
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">The request has succeeded.</response>
+        /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
+        [HttpPost]
+        [ProducesResponseType(typeof(ResolveAliasResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> GetVisaAliasHistory([FromBody] VisaAliasHistoryRequest request)
+        {
+           List<VisaAliasActionHistoryResponse> response = await _AcbaVisaAliasService.GetVisaAliasHistory(request);
             return Ok(response);
         }
     }

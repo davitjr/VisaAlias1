@@ -1,12 +1,10 @@
 ﻿using AcbaVisaAliasApi.Application.Helpers;
-using AcbaVisaAliasApi.Application.Http;
+using AcbaVisaAliasApi.Infrastructure.Http;
 using AcbaVisaAliasApi.Application.Settings;
 using AcbaVisaAliasApi.Infrastructure.DBManager;
 using AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace AcbaVisaAliasApi.Extensions
 {
@@ -22,7 +20,7 @@ namespace AcbaVisaAliasApi.Extensions
            .AddScoped<ICryptographyHelper, CryptographyHelper>()
            .AddScoped<IVisaAliasDB, VisaAliasDB>()
            .AddSingleton<IProblemDetailsHelper, ProblemDetailsHelper>();
-            
+
         }
     }
 }

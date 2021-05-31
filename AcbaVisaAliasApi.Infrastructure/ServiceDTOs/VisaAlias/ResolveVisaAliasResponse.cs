@@ -1,5 +1,8 @@
-﻿namespace AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias
+﻿using System.Collections.Generic;
+
+namespace AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias
 {
+
     public class ResolveVisaAliasResponse
     {
         /// <summary>
@@ -29,5 +32,23 @@
         /// </summary>
         public string RecipientName { get; set; }
 
+        public VisaAliasAccountLookUpInfo AccountLookUpInfo { get; set; }
+    }
+
+    public class VisaAliasNetworkInfo
+    {
+        public string CardTypeCode { get; set; }
+        public int BillingCurrencyCode { get; set; }
+        public int BillingCurrencyMinorDigits { get; set; }
+        public string IssuerName { get; set; }
+        public int CardIssuerCountryCode { get; set; }
+        public string FastFundsIndicator { get; set; }
+        public string PushFundsBlockIndicator { get; set; }
+        public string OnlineGambingBlockIndicator { get; set; }
+    }
+
+    public class VisaAliasAccountLookUpInfo
+    {
+        public List<VisaAliasNetworkInfo> VisaNetworkInfo { get; set; }
     }
 }
