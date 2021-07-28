@@ -1,6 +1,8 @@
 ﻿using AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias;
 using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
+using AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias;
 using AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -187,13 +189,60 @@ namespace AcbaVisaAliasApi.Controllers
         /// <response code="200">The request has succeeded.</response>
         /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
         [HttpPost]
-        [ProducesResponseType(typeof(ResolveAliasResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<VisaAliasActionHistoryResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> GetVisaAliasHistory([FromBody] VisaAliasHistoryRequest request)
         {
-           List<VisaAliasActionHistoryResponse> response = await _AcbaVisaAliasService.GetVisaAliasHistory(request);
+            List<VisaAliasActionHistoryResponse> response = await _AcbaVisaAliasService.GetVisaAliasHistory(request);
             return Ok(response);
         }
+
+        /// <summary>
+        /// Delete Visa Alias Api
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">The request has succeeded.</response>
+        /// <response code="400">The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).</response>
+        /// <response code="404">The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</response>
+        /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
+        /// <response code="503">The server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay.</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(DeleteAliasResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> DeleteVisaAliasWithCardAsync([FromBody] DeleteVisaAliasWithCardRequest deleteVisaAliasWithCardRequest)
+        {
+            DeleteVisaAliasRequest deleteVisaAliasRequest = await _AcbaVisaAliasService.GetVisaAliasForDeleteWithCard(deleteVisaAliasWithCardRequest);
+
+            if (!string.IsNullOrEmpty(deleteVisaAliasRequest.Guid))
+            {
+                DeleteAliasRequest request = new(deleteVisaAliasRequest.Guid, deleteVisaAliasRequest.Alias, deleteVisaAliasWithCardRequest.SetNumber);
+                await _AcbaVisaAliasService.DeleteVisaAliasAsync(request);
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Get Visa Alias history with card number
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">The request has succeeded.</response>
+        /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
+        [HttpPost]
+        [ProducesResponseType(typeof(VisaAliasActionHistoryResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> GetVisaAliasHistoryWithCardAsync([FromBody] VisaAliasHistoryWithCard request)
+        {
+            VisaAliasActionHistoryResponse response = await _AcbaVisaAliasService.GetVisaAliasHistoryWithCardAsync(request);
+
+            return Ok(response);
+        }
+
     }
 }

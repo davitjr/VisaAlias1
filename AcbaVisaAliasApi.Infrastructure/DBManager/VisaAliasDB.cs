@@ -1,5 +1,6 @@
 ﻿using AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias;
 using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
+using AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -132,5 +133,78 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
                     }
             }
         }
+
+        public async Task<DeleteVisaAliasRequest> GetVisaAliasForDeleteWithCard(DeleteVisaAliasWithCardRequest deleteVisaAliasWithCardRequest)
+        {
+            DeleteVisaAliasRequest result = new();
+
+            using SqlConnection dbconn = new(AccOperBase);
+
+            await dbconn.OpenAsync();
+
+            string sqlStr = "SELECT TOP 1 [Guid], Alias FROM tbl_visa_alias WHERE RecipientPrimaryAccountNumber = @cardNumber";
+
+            await using SqlCommand cmd = new(sqlStr, dbconn)
+            {
+                CommandType = CommandType.Text,
+            };
+
+            cmd.Parameters.Add("@cardNumber", SqlDbType.NVarChar).Value = deleteVisaAliasWithCardRequest.Alias;
+
+            using SqlDataReader dr = await cmd.ExecuteReaderAsync();
+
+            while (await dr.ReadAsync())
+            {
+                result.Guid = dr["Guid"].ToString();
+                result.Alias = dr["Alias"].ToString();
+            }
+
+            return result;
+        }
+
+        public async Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(string cardNumber)
+        {
+            VisaAliasActionHistoryResponse result = new();
+
+            using SqlConnection dbconn = new(AccOperBase);
+
+            await dbconn.OpenAsync();
+
+            string sqlStr = "SELECT  Left(EmbossingName, CHARINDEX(' ', EmbossingName) - 1) AS FirstName, Right(EmbossingName, LEN(EmbossingName) - CHARINDEX(' ', EmbossingName)) AS LastName,  * FROM" +
+                " ((SELECT top 1 cardtype, cardnumber, EmbossingName, RIGHT(ExpiryDate, 4) + '-' + LEFT(ExpiryDate, 2) AS ExpiryDate  FROM tbl_visa_applications WHERE cardnumber = @cardNumber  ORDER BY givenDate DESC) va" +
+                " LEFT JOIN(SELECT TOP 1 * FROM tbl_visa_alias WHERE RecipientPrimaryAccountNumber = @cardNumber ORDER BY id DESC) alias" +
+                " ON alias.RecipientPrimaryAccountNumber = va.cardnumber INNER JOIN tbl_type_of_card tc on tc.id = va.cardtype ) ";
+
+            await using SqlCommand cmd = new(sqlStr, dbconn)
+            {
+                CommandType = CommandType.Text,
+            };
+
+            cmd.Parameters.Add("@cardNumber", SqlDbType.NVarChar).Value = cardNumber;
+
+            using SqlDataReader dr = await cmd.ExecuteReaderAsync();
+
+            if (await dr.ReadAsync())
+            {
+                result.CardNumber = dr["RecipientPrimaryAccountNumber"].ToString();
+                result.CardType = dr["ApplicationsCardType"].ToString();
+                result.Alias = dr["Alias"].ToString();
+                result.ActionDate = !string.IsNullOrEmpty(dr["ConsentDateTime"].ToString()) ? Convert.ToDateTime(dr["ConsentDateTime"].ToString()) : (DateTime?)null;
+                result.RecipientFirstName = dr["FirstName"].ToString();
+                result.recipientLastName = dr["LastName"].ToString();
+                if (!string.IsNullOrEmpty(dr["RecipientPrimaryAccountNumber"].ToString()))
+                {
+                    result.Status = "Գործող";
+                }                
+                result.OperDay = DateTime.Now;
+                result.ExpiryDate = dr["ExpiryDate"].ToString();
+                result.Guid = dr["Guid"].ToString();
+            }
+            return result;
+        }
     }
+
+
+
+
 }

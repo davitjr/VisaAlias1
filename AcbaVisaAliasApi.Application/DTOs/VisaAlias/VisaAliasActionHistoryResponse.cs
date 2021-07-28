@@ -16,9 +16,17 @@ namespace AcbaVisaAliasApi.Application.DTOs.VisaAlias
 
         public string Alias { get; set; }
 
-        public DateTime ActionDate { get; set; }
+        public DateTime? ActionDate { get; set; }
 
         public string ActionType { get; set; }
+
+        public string Status { get; set; }
+
+        public DateTime OperDay { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string recipientLastName { get; set; }
+        public string ExpiryDate { get; set; }
+
     }
 }
 

@@ -103,5 +103,18 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         {
            return await _visaAliasDB.GetVisaAliasHistory(request.CustomerNumber);
         }
+
+        public async Task<DeleteVisaAliasRequest> GetVisaAliasForDeleteWithCard(DeleteVisaAliasWithCardRequest deleteVisaAliasWithCardRequest)
+        {
+            return await _visaAliasDB.GetVisaAliasForDeleteWithCard(deleteVisaAliasWithCardRequest);
+        }
+
+        public async Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(VisaAliasHistoryWithCard request)
+        {
+            return await _visaAliasDB.GetVisaAliasHistoryWithCardAsync(request.CardNumber);
+        }
+
+
+
     }
 }

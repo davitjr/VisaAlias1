@@ -1,4 +1,5 @@
 ﻿using AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias;
+using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
 using AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias;
 using AutoMapper;
 using static AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias.GetVisaAliasResponse;
@@ -26,7 +27,7 @@ namespace AcbaVisaAliasApi.Mappings
             CreateMap<ResolveAliasRequest, ResolveVisaAliasRequest>();
             CreateMap<VisaAliasNetworkInfo, VisaNetworkInfo>();
             CreateMap<VisaAliasAccountLookUpInfo, AccountLookUpInfo>();
-            CreateMap<ResolveVisaAliasResponse, ResolveAliasResponse>();
+            CreateMap<ResolveVisaAliasResponse, ResolveAliasResponse>();     
         }
     }
 }
