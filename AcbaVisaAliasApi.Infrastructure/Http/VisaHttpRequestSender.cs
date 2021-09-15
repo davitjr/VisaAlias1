@@ -53,6 +53,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Http
             {
                 await httpResponseHandler.HandleHttpResponse(httpResponseMessage);
             }
+
             return await httpResponseMessage.Content.ReadAsStreamAsync();
         }
     }

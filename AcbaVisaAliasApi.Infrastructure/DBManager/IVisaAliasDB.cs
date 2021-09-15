@@ -13,5 +13,6 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
         Task<DeleteVisaAliasRequest> GetVisaAliasForDeleteWithCard(DeleteVisaAliasWithCardRequest deleteVisaAliasWithCardRequest);
 
         Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(string cardNumber);
+        Task<CreateVisaAliasRequest> GetVisaAlias(ulong customerNumber);
     }
 }

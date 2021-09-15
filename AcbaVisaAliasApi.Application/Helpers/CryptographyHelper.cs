@@ -78,6 +78,5 @@ namespace AcbaVisaAliasApi.Application.Helpers
 
             return rsa;
         }
-
     }
 }

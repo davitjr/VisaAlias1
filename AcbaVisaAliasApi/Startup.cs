@@ -47,6 +47,7 @@ namespace AcbaVisaAliasApi
                 app.UseSwaggerConfigurations();
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();

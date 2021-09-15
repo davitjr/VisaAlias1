@@ -50,6 +50,7 @@ namespace AcbaVisaAliasApi.Extensions
                 IProblemDetailsHelper _problemDetailsHelper = serviceProvider.GetService<IProblemDetailsHelper>();
                 throw new ApiProblemDetailsException(_problemDetailsHelper.GetWrongCertificateProblemDetails());
             }
+
             return certificate;
         }
     }

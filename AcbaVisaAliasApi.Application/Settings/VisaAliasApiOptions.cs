@@ -18,6 +18,5 @@
         public string GenerateReportApi { get; init; }
         public string ResolveApi { get; init; }
         public bool EnableOkResponseLogging { get; init; }
-
     }
 }

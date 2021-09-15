@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System;
 
 namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
 {
@@ -59,12 +60,45 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
             return _mapper.Map<UpdateVisaAliasResponse, UpdateAliasResponse>(response);
         }
 
+        public async Task<UpdateAliasResponse> UpdateVisaAliasByPhoneNumberAsync(VisaAliasChangeRequest changeRequest)
+        {
+            CreateVisaAliasRequest aliasRequest  = await _visaAliasDB.GetVisaAlias(changeRequest.CustomerNumber);
+            UpdateVisaAliasRequest request = new()
+            {
+                Alias = changeRequest.Alias,
+                RecipientPrimaryAccountNumber = aliasRequest.RecipientPrimaryAccountNumber,
+                Guid = aliasRequest.Guid,
+                CardType = aliasRequest.CardType,
+                AliasType = aliasRequest.AliasType,
+                IssuerName = aliasRequest.IssuerName,
+                ConsentDateTime = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss")
+            };
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.UpdateAliasApi, request);
+            UpdateVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<UpdateVisaAliasResponse>(responseStream);
+            await _visaAliasDB.InsertVisaAliasactionHisoty(changeRequest, (short)VisaAliasActionTypes.updatealias);
+            return _mapper.Map<UpdateVisaAliasResponse, UpdateAliasResponse>(response);
+        }
+
         public async Task<DeleteAliasResponse> DeleteVisaAliasAsync(DeleteAliasRequest request)
         {
             DeleteVisaAliasRequest content = _mapper.Map<DeleteAliasRequest, DeleteVisaAliasRequest>(request);
             Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.DeleteAliasApi, content);
             DeleteVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<DeleteVisaAliasResponse>(responseStream);
             await _visaAliasDB.InsertVisaAliasactionHisoty(request, (short)VisaAliasActionTypes.deletealias);
+            return _mapper.Map<DeleteVisaAliasResponse, DeleteAliasResponse>(response);
+        }
+
+        public async Task<DeleteAliasResponse> DeleteVisaAliasByPhoneNumberAsync(VisaAliasChangeRequest changeRequest)
+        {
+            CreateVisaAliasRequest aliasRequest = await _visaAliasDB.GetVisaAlias(changeRequest.CustomerNumber);
+            DeleteVisaAliasRequest request = new()
+            {
+                Alias = changeRequest.Alias,
+                Guid = aliasRequest.Guid
+            };
+            Stream responseStream = await _httpRequestSender.SendPostRequest(_VisaAliasOptions.DeleteAliasApi, request);
+            DeleteVisaAliasResponse response = await _cryptographyHelper.DecryptResponse<DeleteVisaAliasResponse>(responseStream);
+            await _visaAliasDB.InsertVisaAliasactionHisoty(changeRequest, (short)VisaAliasActionTypes.deletealias);
             return _mapper.Map<DeleteVisaAliasResponse, DeleteAliasResponse>(response);
         }
 
@@ -113,8 +147,5 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         {
             return await _visaAliasDB.GetVisaAliasHistoryWithCardAsync(request.CardNumber);
         }
-
-
-
     }
 }

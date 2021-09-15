@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Action = AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias.Action;
 
 namespace AcbaVisaAliasApi.Infrastructure.DBManager
 {
@@ -71,13 +72,13 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
                 CommandType = CommandType.StoredProcedure,
             };
 
-            CollectParameters(request, actionType, cmd);
+            await CollectParameters(request, actionType, cmd);
 
             using SqlDataReader dr = await cmd.ExecuteReaderAsync();
 
         }
 
-        private static void CollectParameters<T>(T request, short actionType, SqlCommand cmd)
+        private async Task CollectParameters<T>(T request, short actionType, SqlCommand cmd)
         {
             cmd.Parameters.Add("@actionType", SqlDbType.SmallInt).Value = actionType;
 
@@ -99,23 +100,56 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
                         cmd.Parameters.Add("@IssuerName", SqlDbType.NVarChar).Value = actionRequest.IssuerName;
                         cmd.Parameters.Add("@ConsentDateTime", SqlDbType.NVarChar).Value = actionRequest.ConsentDateTime;
                         cmd.Parameters.Add("@AliasType", SqlDbType.NVarChar).Value = actionRequest.AliasType;
+                        cmd.Parameters.Add("@ExpireDate", SqlDbType.SmallDateTime).Value = actionRequest.ExpiryDate ;
                     }
+
                     break;
                 case
                    var actionRequesType when actionRequesType == typeof(UpdateAliasRequest):
                     {
                         UpdateAliasRequest actionRequest = (UpdateAliasRequest)(object)request;
 
-                        cmd.Parameters.Add("@setNumber", SqlDbType.Int).Value = actionRequest.SetNumber;
                         cmd.Parameters.Add("@guid", SqlDbType.NVarChar).Value = actionRequest.Guid;
+                        cmd.Parameters.Add("@setNumber", SqlDbType.Int).Value = actionRequest.SetNumber;
                         cmd.Parameters.Add("@cardNumber", SqlDbType.NVarChar).Value = actionRequest.RecipientPrimaryAccountNumber;
                         cmd.Parameters.Add("@cardType", SqlDbType.NVarChar).Value = actionRequest.CardType;
                         cmd.Parameters.Add("@alias", SqlDbType.NVarChar).Value = actionRequest.Alias;
-                        cmd.Parameters.Add("@IssuerName", SqlDbType.NVarChar).Value = actionRequest.IssuerName;
                         cmd.Parameters.Add("@ConsentDateTime", SqlDbType.NVarChar).Value = actionRequest.ConsentDateTime;
-                        cmd.Parameters.Add("@AliasType", SqlDbType.NVarChar).Value = actionRequest.AliasType;
-                        cmd.Parameters.Add("@newGuid", SqlDbType.NVarChar).Value = actionRequest.NewGuid;
+                        cmd.Parameters.Add("@ExpireDate", SqlDbType.SmallDateTime).Value = actionRequest.ExpiryDate;
                     }
+
+                    break;
+                case
+    var actionRequesType when actionRequesType == typeof(VisaAliasChangeRequest):
+                    {
+                        VisaAliasChangeRequest actionRequest = (VisaAliasChangeRequest)(object)request;
+                        CreateVisaAliasRequest aliasRequest = await GetVisaAlias(actionRequest.CustomerNumber);
+                        switch (actionRequest.Action)
+                        {
+                            case Action.Update:
+                                {
+                                    cmd.Parameters.Add("@guid", SqlDbType.NVarChar).Value = aliasRequest.Guid;
+                                    cmd.Parameters.Add("@setNumber", SqlDbType.Int).Value = 88;
+                                    cmd.Parameters.Add("@cardNumber", SqlDbType.NVarChar).Value = aliasRequest.RecipientPrimaryAccountNumber;
+                                    cmd.Parameters.Add("@cardType", SqlDbType.NVarChar).Value = aliasRequest.CardType;
+                                    cmd.Parameters.Add("@alias", SqlDbType.NVarChar).Value = actionRequest.Alias;
+                                    cmd.Parameters.Add("@ConsentDateTime", SqlDbType.NVarChar).Value = aliasRequest.ConsentDateTime;
+                                }
+
+                                break;
+                            case Action.Delete:
+                                {
+                                    cmd.Parameters.Add("@setNumber", SqlDbType.Int).Value = 88;
+                                    cmd.Parameters.Add("@guid", SqlDbType.NVarChar).Value = aliasRequest.Guid;
+                                    cmd.Parameters.Add("@alias", SqlDbType.NVarChar).Value = actionRequest.Alias;
+                                }
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                     break;
                 case
                    var actionRequesType when actionRequesType == typeof(DeleteAliasRequest):
@@ -126,6 +160,7 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
                         cmd.Parameters.Add("@guid", SqlDbType.NVarChar).Value = actionRequest.Guid;
                         cmd.Parameters.Add("@alias", SqlDbType.NVarChar).Value = actionRequest.Alias;
                     }
+
                     break;
                 default:
                     {
@@ -162,6 +197,38 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
             return result;
         }
 
+        public async Task<CreateVisaAliasRequest> GetVisaAlias(ulong customerNumber)
+        {
+            CreateVisaAliasRequest result = new();
+
+            using SqlConnection dbconn = new(AccOperBase);
+
+            await dbconn.OpenAsync();
+
+            string sqlStr = "SELECT TOP 1 * FROM tbl_visa_alias WHERE CustomerNumber = @customerNumber";
+
+            await using SqlCommand cmd = new(sqlStr, dbconn)
+            {
+                CommandType = CommandType.Text,
+            };
+
+            cmd.Parameters.Add("@customerNumber", SqlDbType.BigInt).Value = customerNumber;
+
+            using SqlDataReader dr = await cmd.ExecuteReaderAsync();
+
+            while (await dr.ReadAsync())
+            {
+                result.RecipientPrimaryAccountNumber = dr["RecipientPrimaryAccountNumber"].ToString();
+                result.CardType = dr["CardType"].ToString();
+                result.Guid = dr["Guid"].ToString();
+                result.Alias = dr["Alias"].ToString();
+                result.AliasType = dr["AliasType"].ToString();
+                result.IssuerName = dr["IssuerName"].ToString();
+            }
+
+            return result;
+        }
+
         public async Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(string cardNumber)
         {
             VisaAliasActionHistoryResponse result = new();
@@ -191,20 +258,18 @@ namespace AcbaVisaAliasApi.Infrastructure.DBManager
                 result.Alias = dr["Alias"].ToString();
                 result.ActionDate = !string.IsNullOrEmpty(dr["ConsentDateTime"].ToString()) ? Convert.ToDateTime(dr["ConsentDateTime"].ToString()) : (DateTime?)null;
                 result.RecipientFirstName = dr["FirstName"].ToString();
-                result.recipientLastName = dr["LastName"].ToString();
+                result.RecipientLastName = dr["LastName"].ToString();
                 if (!string.IsNullOrEmpty(dr["RecipientPrimaryAccountNumber"].ToString()))
                 {
                     result.Status = "Գործող";
-                }                
+                }
+
                 result.OperDay = DateTime.Now;
                 result.ExpiryDate = dr["ExpiryDate"].ToString();
                 result.Guid = dr["Guid"].ToString();
             }
+
             return result;
         }
     }
-
-
-
-
 }

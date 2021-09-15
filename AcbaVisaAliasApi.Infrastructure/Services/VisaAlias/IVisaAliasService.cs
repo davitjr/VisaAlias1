@@ -18,6 +18,8 @@ namespace AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias
         Task<TestCredentialsResponse> TestCredentials();
         Task<List<VisaAliasActionHistoryResponse>> GetVisaAliasHistory(VisaAliasHistoryRequest request);
         Task<DeleteVisaAliasRequest> GetVisaAliasForDeleteWithCard(DeleteVisaAliasWithCardRequest deleteVisaAliasWithCardRequest);
-        Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(VisaAliasHistoryWithCard request);  
+        Task<VisaAliasActionHistoryResponse> GetVisaAliasHistoryWithCardAsync(VisaAliasHistoryWithCard request);
+        Task<UpdateAliasResponse> UpdateVisaAliasByPhoneNumberAsync(VisaAliasChangeRequest request);
+        Task<DeleteAliasResponse> DeleteVisaAliasByPhoneNumberAsync(VisaAliasChangeRequest changeRequest);
     }
 }

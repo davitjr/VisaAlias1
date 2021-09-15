@@ -34,26 +34,31 @@ namespace AcbaVisaAliasApi.Application.Helpers
                         ProblemDetails.Type = _localizer["StatusCode400RfcType"];
                         ProblemDetails.Status = StatusCodes.Status400BadRequest;
                     }
+
                     break;
                 case HttpStatusCode.NotFound:
                     {
                         ProblemDetails.Type = _localizer["StatusCode404RfcType"];
                         ProblemDetails.Status = StatusCodes.Status404NotFound;
                     }
+
                     break;
                 case HttpStatusCode.ServiceUnavailable:
                     {
                         ProblemDetails.Type = _localizer["StatusCode503RfcType"];
                         ProblemDetails.Status = StatusCodes.Status503ServiceUnavailable;
                     }
+
                     break;
                 case HttpStatusCode.InternalServerError:
                     {
                         ProblemDetails.Type = _localizer["StatusCode500RfcType"];
                         ProblemDetails.Status = StatusCodes.Status500InternalServerError;
                     }
+
                     break;
             }
+
             return ProblemDetails;
         }
     }

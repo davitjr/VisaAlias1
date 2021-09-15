@@ -60,7 +60,6 @@
         /// </summary>
         public string Guid { get; set; }
 
-
         /// <summary>
         /// This attribute contains the alias data, e.g. phone number, email address, etc.,
         /// If phone number is used for alias, this should be provided in accordance with ITU-T E.164 (2010) 
@@ -76,6 +75,5 @@
         public string Alias { get; set; }
 
         public string ExpiryDate { get; set; }
-
     }
 }

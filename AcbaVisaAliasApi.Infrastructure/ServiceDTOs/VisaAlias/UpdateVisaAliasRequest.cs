@@ -62,7 +62,5 @@
         public string ExpiryDate { get; set; }
 
         public string NewGuid { get; set; }
-        
-
     }
 }

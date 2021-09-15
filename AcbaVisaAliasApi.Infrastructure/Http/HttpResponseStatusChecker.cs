@@ -44,6 +44,7 @@ namespace AcbaVisaAliasApi.Infrastructure.Http
                         {
                             break;
                         }
+
                         AliasErrorResponse aliasErrorResponse = await _cryptographyHelper.DecryptResponse<AliasErrorResponse>(await httpResponseMessage.Content.ReadAsStreamAsync());
                         ProblemDetails validationProblemDetails = _problemDetailsHelper.SetAliasErrorProblemDetail(aliasErrorResponse, httpResponseMessage.StatusCode);
                         throw new ApiProblemDetailsException(validationProblemDetails);

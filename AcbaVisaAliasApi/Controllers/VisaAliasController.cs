@@ -2,12 +2,12 @@
 using AcbaVisaAliasApi.Application.DTOs.VisaAlias;
 using AcbaVisaAliasApi.Infrastructure.ServiceDTOs.AcbaVisaAlias;
 using AcbaVisaAliasApi.Infrastructure.Services.AcbaVisaAlias;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Action = AcbaVisaAliasApi.Application.DTOs.AcbaVisaAlias.Action;
 
 namespace AcbaVisaAliasApi.Controllers
 {
@@ -183,6 +183,30 @@ namespace AcbaVisaAliasApi.Controllers
         }
 
         /// <summary>
+        /// Resolve Visa Alias Api
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">The request has succeeded.</response>
+        /// <response code="400">The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).</response>
+        /// <response code="401">The request has not been applied because it lacks valid authentication credentials for the target resource.</response>
+        /// <response code="404">The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</response>
+        /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
+        /// <response code="503">The server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay.</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(ResolveAliasResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> CheckVisaAliasAsync([FromBody] ResolveAliasRequest request)
+        {
+            ResolveAliasResponse response = await _AcbaVisaAliasService.ResolveVisaAliasAsync(request);
+            return Ok(response);
+        }
+
+        /// <summary>
         /// Get Visa Alias history
         /// </summary>
         /// <returns></returns>
@@ -244,5 +268,39 @@ namespace AcbaVisaAliasApi.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Update Or Delete Visa Alias based on customer main mobile phone changes
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">The request has succeeded.</response>
+        /// <response code="400">The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).</response>
+        /// <response code="404">The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</response>
+        /// <response code="500">The server encountered an unexpected condition that prevented it from fulfilling the request.</response>     
+        /// <response code="503">The server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay.</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(DeleteAliasResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ModifyVisaAliasByPhoneNumberAsync([FromBody] VisaAliasChangeRequest request)
+        {
+            switch (request.Action)
+            {
+                case Action.Update:
+                    {
+                        UpdateAliasResponse response = await _AcbaVisaAliasService.UpdateVisaAliasByPhoneNumberAsync(request);
+                        return Ok(response);
+                    }
+                case Action.Delete:
+                    {
+                        DeleteAliasResponse response = await _AcbaVisaAliasService.DeleteVisaAliasByPhoneNumberAsync(request);
+                        return Ok(response);
+                    }
+                default:
+                    return BadRequest();
+            }
+        }
     }
 }

@@ -17,6 +17,5 @@
         public string Alias { get; set; }
 
         public string AccountLookUp { get; set; }
-
     }
 }
